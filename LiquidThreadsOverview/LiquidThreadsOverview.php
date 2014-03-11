@@ -17,6 +17,9 @@ $wgExtensionCredits['specialpage'][] = array(
 	'version' => '0.1.0',
 );
  
+$wglqtoCss='sortable';
+$wglqtoUseIcons=false;
+ 
 $dir = dirname(__FILE__) . '/';
  
 $wgAutoloadClasses['SpecialLiquidThreadsOverview'] = $dir . 'SpecialLiquidThreadsOverview.php';

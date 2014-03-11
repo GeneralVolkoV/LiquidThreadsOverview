@@ -15,7 +15,7 @@ class SpecialLiquidThreadsOverview extends SpecialPage {
 	}
  
 	function execute( $par ) {
-		global $wgOut, $wgNamespaces;
+		global $wgOut, $wgNamespaces, $wglqtoCss, $wglqtoUseIcons;
 		
 		$this->setHeaders();
 		
@@ -31,14 +31,15 @@ class SpecialLiquidThreadsOverview extends SpecialPage {
 			__METHOD__,
 			array( 'ORDER BY' => 'thread_modified DESC' )
 		);
-		$output='{| width="100%" class="tabellehuebsch sortable"';
-		$output.="\n!".'style="text-align:left;"|&nbsp;';
-		$output.="\n!".'style="text-align:left;"|Seite';
-		$output.="\n!".'style="text-align:left;"|Thema';		
-		$output.="\n!".'style="text-align:left;"|Autor';		
-		$output.="\n!".'style="text-align:left;"|Antworten';		
-		$output.="\n!".'style="text-align:left;"|Erzeugt';		
-		$output.="\n!".'style="text-align:left;"|Modifiziert';		
+		$output='{| width="100%" class="'.$wglqtoCss.'"';
+		if($wglqtoUseIcons)
+			$output.="\n!".'style="text-align:left;"|&nbsp;';
+		$output.="\n!".'style="text-align:left;"|'.wfMessage( 'lqto-page');
+		$output.="\n!".'style="text-align:left;"|'.wfMessage( 'lqto-topic');
+		$output.="\n!".'style="text-align:left;"|'.wfMessage( 'lqto-author');
+		$output.="\n!".'style="text-align:left;"|'.wfMessage( 'lqto-answers');
+		$output.="\n!".'style="text-align:left;"|'.wfMessage( 'lqto-created');
+		$output.="\n!".'style="text-align:left;"|'.wfMessage( 'lqto-modified');
 		$lang=new Language();
 		foreach( $res as $row ) {
 			$namespace=$lang->getNsText($row->thread_article_namespace);
@@ -46,7 +47,8 @@ class SpecialLiquidThreadsOverview extends SpecialPage {
 			$pagelink=$namespace.':'.$article;
 			$threadlink=$pagelink.'#'.$row->thread_subject.'_'.$row->thread_id;
 			$output.="\n|-";
-			$output.="\n||[[Datei:Icon ".$namespace.".svg|20x20px|link=]]";
+			if($wglqtoUseIcons)
+				$output.="\n||[[File:Icon ".$namespace.".svg|20x20px|link=]]";
 			$output.="\n||[[".$pagelink."|".$article."]]";
 			$output.="\n||[[".$threadlink."|".$row->thread_subject."]]";
 			$output.="\n||[[".$lang->getNsText(NS_USER).':'.$row->thread_author_name.'|'.$row->thread_author_name.']]';
