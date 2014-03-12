@@ -12,7 +12,7 @@ $wgExtensionCredits['specialpage'][] = array(
 	'path' => __FILE__,
 	'name' => 'LiquidThreadsOverview',
 	'author' => 'VolkoV',
-	'url' => 'http://www.garetien.de',
+	'url' => 'https://www.mediawiki.org/wiki/Extension:LiquidThreadsOverview',
 	'descriptionmsg' => 'lqto-desc',
 	'version' => '0.1.0',
 );
