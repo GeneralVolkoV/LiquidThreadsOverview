@@ -14,11 +14,13 @@ $wgExtensionCredits['specialpage'][] = array(
 	'author' => 'VolkoV',
 	'url' => 'https://www.mediawiki.org/wiki/Extension:LiquidThreadsOverview',
 	'descriptionmsg' => 'lqto-desc',
-	'version' => '0.1.0',
+	'version' => '0.2.0',
 );
- 
-$wglqtoCss='sortable';
-$wglqtoUseIcons=false;
+
+//Default settings 
+$wglqtoCss='sortable';	//css of table
+$wglqtoUseIcons=false;	//show namespace icon row
+$wglqtoIconType='.svg'; //namespace icon graphic type
  
 $dir = dirname(__FILE__) . '/';
  
