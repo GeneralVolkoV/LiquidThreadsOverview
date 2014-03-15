@@ -72,8 +72,11 @@ class SpecialLiquidThreadsOverview extends IncludableSpecialPage {
 			$pagelink=Linker::link(Title::newFromText($namespace.':'.$article),$article);
 			$threadlink=Linker::link(Title::newFromText($namespace.':'.$article.'#'.$row->thread_subject.'_'.$row->thread_id),$row->thread_subject);
 			$userlink=Linker::link(Title::newFromText($lang->getNsText(NS_USER).':'.$row->thread_author_name),$row->thread_author_name);
-			$icontitle=Title::newFromText($lang->getNsText(NS_FILE).':Icon '.$namespace.'.'.$wglqtoIconType);
-			$iconlink= Linker::makeImageLink($wgParser,$icontitle,wfLocalFile($icontitle),null,Array('height'=>'20px','width'=>'20px'));
+			$icontitletext=$lang->getNsText(NS_FILE).':Icon '.$namespace.'.'.$wglqtoIconType;
+			$icontitle=Title::newFromText($icontitletext);
+			//$iconlink= Linker::makeImageLink($wgParser,$icontitle,wfLocalFile($icontitle),null,Array('height'=>'20px','width'=>'20px'));
+			$iconlink=$wgParser->parse("[[$icontitletext|20x20px|link=]]",$wgParser->getTitle(),new ParserOptions())->getText();
+
 			$output.="</tr><tr>";
 			if($wglqtoUseIcons) {
 				$output.="<td>$iconlink</td>";
