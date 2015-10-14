@@ -24,7 +24,6 @@ class SpecialLiquidThreadsOverview extends IncludableSpecialPage {
 		
 		if (!$this->including())
 			$this->setHeaders();
-		$output='';
 		
 		$parex=explode("/",$par);
 		$limit=50;
@@ -54,49 +53,50 @@ class SpecialLiquidThreadsOverview extends IncludableSpecialPage {
 			__METHOD__,
 			array( 'ORDER BY' => 'thread_modified DESC', 'LIMIT' => $limit )
 		);
-		$output.='<table width="100%" class="'.$wglqtoCss.'"><tr>';
+		$wgOut->addHTML('<table width="100%" class="'.$wglqtoCss.'"><tr>');
 		if($wglqtoUseIcons)
-			$output.='<th style="text-align:left;">&nbsp;</th>';
-		$output.='<th style="text-align:left;">'.wfMessage( 'lqto-page').'</th>';
-		$output.='<th style="text-align:left;">'.wfMessage( 'lqto-topic').'</th>';
-		$output.='<th style="text-align:left;">'.wfMessage( 'lqto-author').'</th>';
-		$output.='<th style="text-align:left;">'.wfMessage( 'lqto-answers').'</th>';
-		$output.='<th style="text-align:left;">'.wfMessage( 'lqto-created').'</th>';
-		$output.='<th style="text-align:left;">'.wfMessage( 'lqto-modified').'</th>';
+			$wgOut->addHTML('<th style="text-align:left;">&nbsp;</th>');
+		$wgOut->addHTML('<th style="text-align:left;">'.wfMessage( 'lqto-page').'</th>');
+		$wgOut->addHTML('<th style="text-align:left;">'.wfMessage( 'lqto-topic').'</th>');
+		$wgOut->addHTML('<th style="text-align:left;">'.wfMessage( 'lqto-author').'</th>');
+		$wgOut->addHTML('<th style="text-align:left;">'.wfMessage( 'lqto-answers').'</th>');
+		$wgOut->addHTML('<th style="text-align:left;">'.wfMessage( 'lqto-created').'</th>');
+		$wgOut->addHTML('<th style="text-align:left;">'.wfMessage( 'lqto-modified').'</th>');
 		if($summarized=='')
-			$output.='<th style="text-align:left;">'.wfMessage( 'lqto-summarized').'</th>';
+			$wgOut->addHTML('<th style="text-align:left;">'.wfMessage( 'lqto-summarized').'</th>');
 		$lang=new Language();
 		foreach( $res as $row ) {
 			$namespace=$lang->getNsText($row->thread_article_namespace);
 			$article=str_replace("_"," ",$row->thread_article_title);
-			$pagelink=Linker::link(Title::newFromText($namespace.':'.$article),$article);
+			$titleArticle=Title::newFromText($namespace.':'.$article);	
+			$pagelink=Linker::link($titleArticle,$article);
 			$threadlink=Linker::link(Title::newFromText($namespace.':'.$article.'#'.$row->thread_subject.'_'.$row->thread_id),$row->thread_subject);
 			$userlink=Linker::link(Title::newFromText($lang->getNsText(NS_USER).':'.$row->thread_author_name),$row->thread_author_name);
 			$icontitletext=$lang->getNsText(NS_FILE).':Icon '.$namespace.'.'.$wglqtoIconType;
-			$icontitle=Title::newFromText($icontitletext);
-			//$iconlink= Linker::makeImageLink($wgParser,$icontitle,wfLocalFile($icontitle),null,Array('height'=>'20px','width'=>'20px'));
-			$iconlink=$wgParser->parse("[[$icontitletext|20x20px|link=]]",$wgParser->getTitle(),new ParserOptions())->getText();
 
-			$output.="</tr><tr>";
-			if($wglqtoUseIcons) {
-				$output.="<td>$iconlink</td>";
-			}
+			$articleObject=new Article($titleArticle);
+			if((!is_null($articleObject))&&($articleObject->exists())) {
+				$wgOut->addHTML("</tr><tr>");
+				if($wglqtoUseIcons) {
+					$wgOut->addHTML("<td>");
+					$wgOut->addWikiText("[[$icontitletext|20x20px|link=]]");
+					$wgOut->addHTML("</td>");
+				}
 
-			$output.="<td>$pagelink</td>";
-			$output.="<td>$threadlink</td>";
-			$output.="<td>$userlink</td>";
-			$output.="<td>".$row->thread_replies.'</td>';
-			$output.="<td>".$this->formattime($row->thread_created).'</td>';
-			$output.="<td>".$this->formattime($row->thread_modified).'</td>';
-			if($summarized=='') {
-				$s=wfMessage( 'lqto-summaryno');
-				if($row->thread_summary_page!=null)
-					$s=wfMessage( 'lqto-summaryyes');
-				$output.="<td>$s</td>";
+				$wgOut->addHTML("<td>$pagelink</td>");
+				$wgOut->addHTML("<td>$threadlink</td>");
+				$wgOut->addHTML("<td>$userlink</td>");
+				$wgOut->addHTML("<td>".$row->thread_replies.'</td>');
+				$wgOut->addHTML("<td>".$this->formattime($row->thread_created).'</td>');
+				$wgOut->addHTML("<td>".$this->formattime($row->thread_modified).'</td>');
+				if($summarized=='') {
+					$s=wfMessage( 'lqto-summaryno');
+					if($row->thread_summary_page!=null)
+						$s=wfMessage( 'lqto-summaryyes');
+					$output.="<td>$s</td>";
+				}
 			}
 		}
-		$output.="</tr></table>";
- 
-		$wgOut->addHTML( $output );
+		$wgOut->addHTML("</tr></table>");
 	}
 }
